@@ -1,0 +1,25 @@
+{
+	"name": "austineseller",
+	"version": "1.0.0",
+	"description": "scraping using puppeteer",
+	"main": "index.js",
+	"scripts": {
+		"start": "node src/index.js"
+	},
+	"author": "Mounika",
+	"license": "ISC",
+	"dependencies": {
+		"async": "^2.6.1",
+		"csv-parser": "^2.1.0",
+		"express": "^4.16.4",
+		"puppeteer": "^1.10.0",
+		"save": "^2.3.2"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-es2015": "^6.24.1",
+		"babel-register": "^6.26.0",
+		"rimraf": "^2.6.2"
+	}
+}
