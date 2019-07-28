@@ -3,19 +3,26 @@ const { writeLog } = require("./logger");
 
 async function getProductDetails(productId) {
   const productURL = `https://www.brother-usa.com/products/${productId}`;
-  let product = {};
+  let product = {
+    id: productId
+  };
   try {
     const browser = await puppeteer.launch({ headless: false });
+    console.log("browser", browser);
     const page = await browser.newPage();
+    console.log("hiii");
     await page.setViewport({ width: 1366, height: 768 });
-    const response = await page.goto(productURL, { waitUntil: "networkidle2" });
+    const response = await page.goto(productURL, {
+      waitUntil: "networkidle2",
+      timeout: 3000000
+    });
     // console.log("response.headers", response._status);
     if (response._status !== 200) {
       writeLog(`${productId} : ${response._status}`);
       browser.close();
       return {};
     }
-    await page.screenshot({ path: "brother-usa-screenshots/hll6200dw.png" });
+    await page.screenshot({ path: `brother-usa-screenshots/${productId}.png` });
     console.log("==============id================");
 
     await page.waitForSelector(".product-details .product-meta h1");
@@ -23,10 +30,10 @@ async function getProductDetails(productId) {
       return await document.querySelector(".product-details .product-meta h1")
         .innerText;
     });
-    console.log("id:", text);
+    console.log("pid:", text);
     product = {
       ...product,
-      id: text
+      pid: text
     };
     console.log("==============title================");
     await page.waitForSelector(".product-details .product-meta h2");
@@ -81,6 +88,7 @@ async function getProductDetails(productId) {
       overview = await page.evaluate(async () => {
         return await document.querySelector(".tab-content #overview").innerHTML;
       });
+      overview = await formatCode(overview);
     } catch (e) {
       overview = "";
     }
@@ -97,6 +105,7 @@ async function getProductDetails(productId) {
         return await document.querySelector(".tab-content #specifications")
           .innerHTML;
       });
+      specifications = await specifications(overview);
     } catch (e) {
       specifications = "";
     }
@@ -108,7 +117,14 @@ async function getProductDetails(productId) {
     console.log("==============images================");
     await page.waitForSelector(".slide-item");
     const images = await page.$$eval(".slide-item img[src]", imgs =>
-      imgs.map(img => img.getAttribute("src"))
+      // imgs.map(img => img.getAttribute("src"))
+      imgs.map(img => {
+        if (img.getAttribute("src").includes("main-image_no-photo-01.png")) {
+          return "";
+        } else {
+          return img.getAttribute("src");
+        }
+      })
     );
     // console.log("images:", images);
     product = {
@@ -119,10 +135,16 @@ async function getProductDetails(productId) {
     return product;
   } catch (error) {
     console.log("catched error:", error);
-    writeLog(`${productId} : error`);
     await browser.close();
-    return "Something went wrong";
+    writeLog(`${productId} : error`);
+    return { error: true };
   }
+}
+
+function formatCode(code) {
+  rmNewlines = code.replace(/\n|\r/g, "");
+  rmSpaces = rmNewlines.replace(/  +/g, "");
+  return rmSpaces;
 }
 
 // export { getAvailablity };
