@@ -8,9 +8,7 @@ async function getProductDetails(productId) {
   };
   try {
     const browser = await puppeteer.launch({ headless: false });
-    console.log("browser", browser);
     const page = await browser.newPage();
-    console.log("hiii");
     await page.setViewport({ width: 1366, height: 768 });
     const response = await page.goto(productURL, {
       waitUntil: "networkidle2",
