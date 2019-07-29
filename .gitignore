@@ -1,2 +1,7 @@
 node_modules/
 creds.js
+logs/debug.log
+products.json
+src/input_csv.csv
+brother-usa-screenshots/
+

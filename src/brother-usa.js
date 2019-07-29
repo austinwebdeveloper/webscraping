@@ -18,7 +18,7 @@ async function getProductDetails(productId) {
     if (response._status !== 200) {
       writeLog(`${productId} : ${response._status}`);
       browser.close();
-      return {};
+      return { id: productId };
     }
     await page.screenshot({ path: `brother-usa-screenshots/${productId}.png` });
     console.log("==============id================");
