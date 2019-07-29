@@ -22,23 +22,32 @@ async function getProductDetails(productId) {
     }
     await page.screenshot({ path: `brother-usa-screenshots/${productId}.png` });
     console.log("==============id================");
-
-    await page.waitForSelector(".product-details .product-meta h1");
-    const text = await page.evaluate(async () => {
-      return await document.querySelector(".product-details .product-meta h1")
-        .innerText;
-    });
-    console.log("pid:", text);
+    let pid;
+    try {
+      await page.waitForSelector(".product-details .product-meta h1");
+      const pid = await page.evaluate(async () => {
+        return await document.querySelector(".product-details .product-meta h1")
+          .innerText;
+      });
+    } catch (e) {
+      pid = "";
+    }
+    console.log("pid:", pid);
     product = {
       ...product,
-      pid: text
+      pid
     };
     console.log("==============title================");
-    await page.waitForSelector(".product-details .product-meta h2");
-    const title = await page.evaluate(async () => {
-      return await document.querySelector(".product-details .product-meta h2")
-        .innerText;
-    });
+    let title;
+    try {
+      await page.waitForSelector(".product-details .product-meta h2");
+      const title = await page.evaluate(async () => {
+        return await document.querySelector(".product-details .product-meta h2")
+          .innerText;
+      });
+    } catch (e) {
+      title = "";
+    }
     console.log("title:", title);
     product = {
       ...product,
