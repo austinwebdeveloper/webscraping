@@ -112,7 +112,7 @@ async function getProductDetails(productId) {
         return await document.querySelector(".tab-content #specifications")
           .innerHTML;
       });
-      specifications = await specifications(overview);
+      specifications = await formatCode(overview);
     } catch (e) {
       specifications = "";
     }
