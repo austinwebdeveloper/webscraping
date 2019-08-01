@@ -7,7 +7,7 @@ async function getProductDetails(productId) {
     id: productId
   };
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
     const response = await page.goto(productURL, {
@@ -25,7 +25,7 @@ async function getProductDetails(productId) {
     let pid;
     try {
       await page.waitForSelector(".product-details .product-meta h1");
-      const pid = await page.evaluate(async () => {
+      pid = await page.evaluate(async () => {
         return await document.querySelector(".product-details .product-meta h1")
           .innerText;
       });
@@ -41,7 +41,7 @@ async function getProductDetails(productId) {
     let title;
     try {
       await page.waitForSelector(".product-details .product-meta h2");
-      const title = await page.evaluate(async () => {
+      title = await page.evaluate(async () => {
         return await document.querySelector(".product-details .product-meta h2")
           .innerText;
       });
@@ -112,7 +112,7 @@ async function getProductDetails(productId) {
         return await document.querySelector(".tab-content #specifications")
           .innerHTML;
       });
-      specifications = await formatCode(overview);
+      specifications = await formatCode(specifications);
     } catch (e) {
       specifications = "";
     }
